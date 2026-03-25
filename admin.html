@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Art & Craft</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>Art & Craft 🎨</h2>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart 🛒</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<h1 style="text-align:center;">Admin Panel 📦</h1>
+
+<div id="orders" style="display:flex; flex-direction:column; align-items:center;"></div>
+
+<script>
+// FETCH ORDERS FROM BACKEND
+fetch("http://localhost:5000/orders")
+.then(res => res.json())
+.then(data => {
+  const ordersDiv = document.getElementById("orders");
+
+  if(data.length === 0){
+    ordersDiv.innerHTML = "<p>No orders yet ❌</p>";
+  }
+
+  data.forEach(order => {
+    ordersDiv.innerHTML += `
+      <div class="card" style="width:300px; margin:10px; text-align:left;">
+        <h3>${order.name}</h3>
+        <p><b>Address:</b> ${order.address}</p>
+        <p><b>Phone:</b> ${order.phone}</p>
+        <p><b>Products:</b></p>
+        <ul>
+          ${order.products.map(p => `<li>${p.name} - ₹${p.price}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  });
+})
+.catch(err => console.log(err));
+</script>
+
+</body>
+</html>

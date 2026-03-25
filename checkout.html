@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout - Art & Craft</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>Art & Craft 🎨</h2>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart 🛒</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<h1>Checkout 💳</h1>
+
+<!-- USER DETAILS FORM -->
+<div class="card">
+  <input id="name" placeholder="Your Name"><br><br>
+  <input id="address" placeholder="Address"><br><br>
+  <input id="phone" placeholder="Phone Number"><br><br>
+
+  <button onclick="placeOrder()">Place Order 💖</button>
+</div>
+
+<script>
+function placeOrder() {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if(cart.length === 0) {
+    alert("Cart is empty ❌");
+    return;
+  }
+
+  const order = {
+    name: document.getElementById("name").value,
+    address: document.getElementById("address").value,
+    phone: document.getElementById("phone").value,
+    products: cart
+  };
+
+  fetch("http://localhost:5000/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(order)
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert("Order Placed Successfully 💖");
+    localStorage.removeItem("cart");
+    window.location.href = "index.html";
+  });
+}
+</script>
+
+</body>
+</html>

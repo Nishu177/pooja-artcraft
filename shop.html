@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop - Art & Craft</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Simple CSS for cards layout */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    }
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff1493;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>Art & Craft 🎨</h2>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart 🛒</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<h1 style="text-align:center;">Shop Our Crafts 🛍️</h1>
+
+<!-- PRODUCTS -->
+<div id="products" class="cards"></div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// ADD TO CART FUNCTION
+function addToCart(name, price, image) {
+  cart.push({name, price, image});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to cart 💖");
+}
+
+// ------------------------
+// DYNAMIC PRODUCTS FETCH
+// ------------------------
+const container = document.getElementById("products");
+
+// Try fetching products from backend first
+fetch("http://localhost:5000/products")  // Backend URL (change if different)
+  .then(res => res.json())
+  .then(products => {
+    if(products.length === 0) {
+      container.innerHTML = "<p style='text-align:center;'>No products available 😢</p>";
+      return;
+    }
+
+    products.forEach(p => {
+      // If product has images array, join first image
+      let image = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
+      container.innerHTML += `
+        <div class="card">
+          <img src="${image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>₹${p.price}</p>
+          <button onclick="addToCart('${p.name}', ${p.price}, '${image}')">
+            Add to Cart 🛒
+          </button>
+        </div>
+      `;
+    });
+  })
+  .catch(err => {
+    console.log("Backend fetch failed, using static products.", err);
+
+    // ------------------------
+    // FALLBACK STATIC PRODUCTS
+    // ------------------------
+    const staticProducts = [
+      {
+        name: "Handmade Vase",
+        price: 200,
+        image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+      },
+      {
+        name: "Wall Hanging",
+        price: 300,
+        image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4"
+      },
+      {
+        name: "Craft Kit",
+        price: 150,
+        image: "https://images.unsplash.com/photo-1503602642458-232111445657"
+      },
+      {
+        name: "Bottle Art",
+        price: 250,
+        image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+      }
+    ];
+
+    staticProducts.forEach(p => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+          <p>₹${p.price}</p>
+          <button onclick="addToCart('${p.name}', ${p.price}, '${p.image}')">
+            Add to Cart 🛒
+          </button>
+        </div>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>

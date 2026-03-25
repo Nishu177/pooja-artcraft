@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cart - Art & Craft</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>Art & Craft 🎨</h2>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart 🛒</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<h1>Your Cart 🛒</h1>
+
+<div id="cart"></div>
+
+<h2 id="total"></h2>
+
+<a href="checkout.html">
+  <button>Proceed to Checkout 💳</button>
+</a>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cartDiv = document.getElementById("cart");
+let total = 0;
+
+// DISPLAY CART ITEMS
+function showCart() {
+  cartDiv.innerHTML = "";
+  total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    cartDiv.innerHTML += `
+      <div class="card">
+        <img src="${item.image}" width="100">
+        <h3>${item.name}</h3>
+        <p>₹${item.price}</p>
+        <button onclick="removeItem(${index})">Remove ❌</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+// REMOVE ITEM
+function removeItem(index) {
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  showCart();
+}
+
+showCart();
+</script>
+
+</body>
+</html>
