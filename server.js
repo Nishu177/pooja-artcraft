@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ MongoDB Atlas connect (IMPORTANT)
-mongoose.connect("mongodb+srv://nisha:ekisha77cluster0.uklak6o.mongodb.net/artcraft?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://nisha:ekisha777@cluster0.uklak6o.mongodb.net/artcraft?retryWrites=true&w=majorit")
 .then(() => console.log("MongoDB Atlas Connected ✅"))
 .catch(err => console.log(err));
 
