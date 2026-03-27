@@ -73,7 +73,7 @@ function addToCart(name, price, image) {
 const container = document.getElementById("products");
 
 // Try fetching products from backend first
-fetch("http://localhost:5000/products")  // Backend URL (change if different)
+fetch("https://pooja-artcraft.onrender.com/products")  // Backend URL (change if different)
   .then(res => res.json())
   .then(products => {
     if(products.length === 0) {
