@@ -8,12 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connect
-mongoose.connect("mongodb://127.0.0.1:27017/artcraft")
-.then(() => console.log("MongoDB Connected ✅"))
+// ✅ MongoDB Atlas connect (IMPORTANT)
+mongoose.connect("mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/artcraft?retryWrites=true&w=majority")
+.then(() => console.log("MongoDB Atlas Connected ✅"))
 .catch(err => console.log(err));
 
-// Order Schema
+// ================= SCHEMA =================
 const Order = mongoose.model("Order", {
   name: String,
   address: String,
@@ -23,24 +23,42 @@ const Order = mongoose.model("Order", {
 
 // ================= ROUTES =================
 
+// TEST ROUTE (optional but useful)
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
 // SAVE ORDER
 app.post("/order", async (req, res) => {
-  console.log("Order Received:", req.body);
+  try {
+    console.log("Order Received:", req.body);
 
-  const newOrder = new Order(req.body);
-  await newOrder.save();
+    const newOrder = new Order(req.body);
+    await newOrder.save();
 
-  res.send("Order Saved Successfully 💖");
+    res.send("Order Saved Successfully 💖");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error saving order ❌");
+  }
 });
 
 // GET ALL ORDERS (ADMIN PAGE)
 app.get("/orders", async (req, res) => {
-  const orders = await Order.find();
-  res.send(orders);
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching orders ❌");
+  }
 });
 
-// ==========================================
+// ================= PORT =================
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000 🚀");
+// Render ke liye dynamic port
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} 🚀`);
 });
