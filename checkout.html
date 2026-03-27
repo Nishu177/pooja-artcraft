@@ -44,6 +44,25 @@ function placeOrder() {
     products: cart
   };
 
+  setTimeout(() => {
+  fetch("https://pooja-artcraft.onrender.com/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(order)
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert("Order Placed Successfully 💖");
+    localStorage.removeItem("cart");
+    window.location.href = "index.html";
+  })
+  .catch(err => {
+    alert("Error placing order ❌");
+    console.log(err);
+  });
+}, 2000);
   // ✅ UPDATED BACKEND URL
   fetch("https://pooja-artcraft.onrender.com/order", {
     method: "POST",
